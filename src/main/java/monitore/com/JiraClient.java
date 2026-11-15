@@ -12,7 +12,8 @@ public class JiraClient {
         String corpoJson = """
                 {
                   "jql": "project = KAN ORDER BY created DESC",
-                  "fields": ["summary", "status", "priority", "assignee", "created"],
+                  "fields": ["summary", "status", "priority", "assignee",
+                             "created", "updated", "resolutiondate", "duedate"],
                   "maxResults": 10
                 }
                 """;

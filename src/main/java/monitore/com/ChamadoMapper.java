@@ -3,43 +3,22 @@ package monitore.com;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
+import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ChamadoMapper {
-    private static final DateTimeFormatter FORMATO_DATA_JIRA =
-            new DateTimeFormatterBuilder()
-                    .appendPattern("uuuu-MM-dd'T'HH:mm:ss")
-                    .appendFraction(ChronoField.NANO_OF_SECOND, 0, 9, true)
-                    .appendPattern("Z")
-                    .toFormatter();
-
-    private Instant converterData(JsonNode valorJson) {
-        if (valorJson.isMissingNode() || valorJson.isNull()
-                || valorJson.asText().isBlank()) {
-            return null;
-        }
-
-        return OffsetDateTime
-                .parse(valorJson.asText(), FORMATO_DATA_JIRA)
-                .toInstant();
-    }
 
     public List<Chamado> converterParaChamados(String json) throws JsonProcessingException {
         List<Chamado> chamados = new ArrayList<>();
-
         ObjectMapper leitorJson = new ObjectMapper();
         JsonNode raiz = leitorJson.readTree(json);
+        Conversor conversor = new Conversor();
 
         JsonNode chamadosJson = raiz.path("issues");
-
+        System.out.println(chamadosJson);
         for (JsonNode chamado : chamadosJson) {
             JsonNode campos = chamado.path("fields");
 
@@ -49,13 +28,27 @@ public class ChamadoMapper {
             String prioridade = campos.path("priority").path("name").asText();
             String responsavel = campos.path("assignee").path("displayName")
                     .asText("Sem responsável");
-            Instant criadoEm = converterData(campos.path("created"));
-            Instant atualizadoEm = converterData(campos.path("updated"));
-            Instant resolvidoEm = converterData(campos.path("resolutiondate"));
+            Instant criadoEm = conversor.converterData(campos.path("created"));
+            Instant atualizadoEm = conversor.converterData(campos.path("updated"));
+            Instant resolvidoEm = conversor.converterData(campos.path("resolutiondate"));
+            JsonNode dataEntregaJson = campos.path("duedate");
+            LocalDate dataEntrega = null;
+            Long prazoSlaEm = null;
+            Boolean slaVencido = null;
+
+            if (!dataEntregaJson.isMissingNode()
+                    && !dataEntregaJson.isNull()
+                    && !dataEntregaJson.asText().isBlank()) {
+                dataEntrega = LocalDate.parse(dataEntregaJson.asText());
+                Instant prazoFinal = conversor.getPrazoFinalConvertido(dataEntrega);
+                prazoSlaEm = conversor.getSegundosRestantes(prazoFinal);
+                slaVencido = conversor.getSlaVencido(prazoSlaEm);
+            }
 
             Chamado chamado1 = new Chamado(
                     chave, resumo, status, prioridade, responsavel,
-                    criadoEm, atualizadoEm, resolvidoEm
+                    criadoEm, atualizadoEm, resolvidoEm,
+                    dataEntrega, prazoSlaEm, slaVencido
             );
             chamados.add(chamado1);
         }

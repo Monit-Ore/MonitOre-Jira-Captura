@@ -1,6 +1,7 @@
 package monitore.com;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 public class Chamado {
     private String chave;
@@ -11,7 +12,9 @@ public class Chamado {
     private Instant criadoEm;
     private Instant atualizadoEm;
     private Instant resolvidoEm;
-
+    private LocalDate dataEntrega;
+    private Long prazoSlaEm;
+    private Boolean slaVencido;
 
     public Chamado(
             String chave,
@@ -21,7 +24,10 @@ public class Chamado {
             String responsavel,
             Instant criadoEm,
             Instant atualizadoEm,
-            Instant resolvidoEm
+            Instant resolvidoEm,
+            LocalDate dataEntrega,
+            Long prazoSlaEm,
+            Boolean slaVencido
     ) {
         this.chave = chave;
         this.resumo = resumo;
@@ -31,6 +37,21 @@ public class Chamado {
         this.criadoEm = criadoEm;
         this.atualizadoEm = atualizadoEm;
         this.resolvidoEm = resolvidoEm;
+        this.dataEntrega = dataEntrega;
+        this.prazoSlaEm = prazoSlaEm;
+        this.slaVencido = slaVencido;
+    }
+
+    public LocalDate getDataEntrega() {
+        return dataEntrega;
+    }
+
+    public Long getPrazoSlaEm() {
+        return prazoSlaEm;
+    }
+
+    public Boolean getSlaVencido() {
+        return slaVencido;
     }
 
     public String getChave() {
@@ -76,6 +97,9 @@ public class Chamado {
                 ", criadoEm=" + criadoEm +
                 ", atualizadoEm=" + atualizadoEm +
                 ", resolvidoEm=" + resolvidoEm +
+                ", dataEntrega=" + dataEntrega +
+                ", prazoSlaEm=" + prazoSlaEm +
+                ", slaVencido=" + slaVencido +
                 '}';
     }
 }
