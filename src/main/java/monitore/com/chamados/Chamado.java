@@ -1,4 +1,4 @@
-package monitore.com;
+package monitore.com.chamados;
 
 import java.time.Instant;
 import java.time.LocalDate;

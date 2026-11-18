@@ -1,8 +1,10 @@
-package monitore.com;
+package monitore.com.chamados;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import monitore.com.Conversor;
+
 import java.time.Instant;
 import java.time.LocalDate;
 
