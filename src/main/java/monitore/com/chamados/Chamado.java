@@ -15,20 +15,10 @@ public class Chamado {
     private LocalDate dataEntrega;
     private Long prazoSlaEm;
     private Boolean slaVencido;
+    private String projeto;
+    private String tipo;
 
-    public Chamado(
-            String chave,
-            String resumo,
-            String status,
-            String prioridade,
-            String responsavel,
-            Instant criadoEm,
-            Instant atualizadoEm,
-            Instant resolvidoEm,
-            LocalDate dataEntrega,
-            Long prazoSlaEm,
-            Boolean slaVencido
-    ) {
+    public Chamado(String chave, String resumo, String status, String prioridade, String responsavel, Instant criadoEm, Instant atualizadoEm, Instant resolvidoEm, LocalDate dataEntrega, Long prazoSlaEm, Boolean slaVencido, String projeto, String tipo) {
         this.chave = chave;
         this.resumo = resumo;
         this.status = status;
@@ -40,6 +30,16 @@ public class Chamado {
         this.dataEntrega = dataEntrega;
         this.prazoSlaEm = prazoSlaEm;
         this.slaVencido = slaVencido;
+        this.projeto = projeto;
+        this.tipo = tipo;
+    }
+
+    public String getProjeto() {
+        return projeto;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
     public LocalDate getDataEntrega() {
@@ -100,6 +100,8 @@ public class Chamado {
                 ", dataEntrega=" + dataEntrega +
                 ", prazoSlaEm=" + prazoSlaEm +
                 ", slaVencido=" + slaVencido +
+                ", projeto='" + projeto + '\'' +
+                ", tipo='" + tipo + '\'' +
                 '}';
     }
 }

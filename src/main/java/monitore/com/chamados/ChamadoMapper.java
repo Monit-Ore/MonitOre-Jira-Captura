@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ChamadoMapper {
 
@@ -27,7 +28,8 @@ public class ChamadoMapper {
             String chave = chamado.path("key").asText();
             String resumo = campos.path("summary").asText();
             String status = campos.path("status").path("name").asText();
-            String prioridade = campos.path("priority").path("name").asText();
+            String prioridadeJira = campos.path("priority").path("name").asText();
+            String prioridade = normalizarPrioridade(prioridadeJira);
             String responsavel = campos.path("assignee").path("displayName")
                     .asText("Sem responsável");
             Instant criadoEm = conversor.converterData(campos.path("created"));
@@ -37,6 +39,9 @@ public class ChamadoMapper {
             LocalDate dataEntrega = null;
             Long prazoSlaEm = null;
             Boolean slaVencido = null;
+            String projeto = campos.path("project").path("name").asText();
+            String tipo = campos.path("issuetype").path("name").asText();
+
 
             if (!dataEntregaJson.isMissingNode()
                     && !dataEntregaJson.isNull()
@@ -50,11 +55,22 @@ public class ChamadoMapper {
             Chamado chamado1 = new Chamado(
                     chave, resumo, status, prioridade, responsavel,
                     criadoEm, atualizadoEm, resolvidoEm,
-                    dataEntrega, prazoSlaEm, slaVencido
+                    dataEntrega, prazoSlaEm, slaVencido, projeto, tipo
             );
             chamados.add(chamado1);
         }
 
         return chamados;
+    }
+
+
+    private String normalizarPrioridade(String prioridadeJira) {
+        return switch (prioridadeJira.trim().toLowerCase(Locale.ROOT)) {
+            case "highest" -> "Crítica";
+            case "high" -> "Alta";
+            case "medium" -> "Média";
+            case "low" -> "Baixa";
+            default -> prioridadeJira;
+        };
     }
 }

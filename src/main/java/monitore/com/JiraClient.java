@@ -32,6 +32,9 @@ public class JiraClient {
         fields.add("updated");
         fields.add("resolutiondate");
         fields.add("duedate");
+        fields.add("issuetype");
+        fields.add("project");
+
 
         if (nextPageToken != null) {
             corpo.put("nextPageToken", nextPageToken);
