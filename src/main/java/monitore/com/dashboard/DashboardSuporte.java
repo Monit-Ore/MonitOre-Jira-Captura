@@ -7,27 +7,26 @@ import java.util.List;
 public class DashboardSuporte {
     private MetadadosDashboard metadados;
     private IndicadoresSuporte indicadores;
-    private List<StatusQuantidade> distribuicaoPorStatus;
     private List<PontoTemporal> serieTemporal;
     private List<PontoTendenciaSla> tendenciaSla;
     private QuebrasSla quebrasSla;
     private List<CapacidadeEquipe> capacidadeDaEquipe;
-    private TempoResolucao tempoDeResolucao;
     private List<ChamadoAtencao> chamadosQuePrecisamDeAtencao;
 
     // Construtor, getters e setters
 
 
-    public DashboardSuporte(MetadadosDashboard metadados, IndicadoresSuporte indicadores, List<StatusQuantidade> distribuicaoPorStatus, List<PontoTemporal> serieTemporal, List<PontoTendenciaSla> tendenciaSla, QuebrasSla quebrasSla, List<CapacidadeEquipe> capacidadeDaEquipe, TempoResolucao tempoDeResolucao, List<ChamadoAtencao> chamadosQuePrecisamDeAtencao) {
+    public DashboardSuporte(MetadadosDashboard metadados, IndicadoresSuporte indicadores, List<PontoTemporal> serieTemporal, List<PontoTendenciaSla> tendenciaSla, QuebrasSla quebrasSla, List<CapacidadeEquipe> capacidadeDaEquipe, List<ChamadoAtencao> chamadosQuePrecisamDeAtencao) {
         this.metadados = metadados;
         this.indicadores = indicadores;
-        this.distribuicaoPorStatus = distribuicaoPorStatus;
         this.serieTemporal = serieTemporal;
         this.tendenciaSla = tendenciaSla;
         this.quebrasSla = quebrasSla;
         this.capacidadeDaEquipe = capacidadeDaEquipe;
-        this.tempoDeResolucao = tempoDeResolucao;
         this.chamadosQuePrecisamDeAtencao = chamadosQuePrecisamDeAtencao;
+    }
+
+    public DashboardSuporte() {
     }
 
 
@@ -45,14 +44,6 @@ public class DashboardSuporte {
 
     public void setIndicadores(IndicadoresSuporte indicadores) {
         this.indicadores = indicadores;
-    }
-
-    public List<StatusQuantidade> getDistribuicaoPorStatus() {
-        return distribuicaoPorStatus;
-    }
-
-    public void setDistribuicaoPorStatus(List<StatusQuantidade> distribuicaoPorStatus) {
-        this.distribuicaoPorStatus = distribuicaoPorStatus;
     }
 
     public List<PontoTemporal> getSerieTemporal() {
@@ -85,14 +76,6 @@ public class DashboardSuporte {
 
     public void setCapacidadeDaEquipe(List<CapacidadeEquipe> capacidadeDaEquipe) {
         this.capacidadeDaEquipe = capacidadeDaEquipe;
-    }
-
-    public TempoResolucao getTempoDeResolucao() {
-        return tempoDeResolucao;
-    }
-
-    public void setTempoDeResolucao(TempoResolucao tempoDeResolucao) {
-        this.tempoDeResolucao = tempoDeResolucao;
     }
 
     public List<ChamadoAtencao> getChamadosQuePrecisamDeAtencao() {

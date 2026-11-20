@@ -7,6 +7,9 @@ import java.util.List;
 import monitore.com.chamados.Chamado;
 import monitore.com.chamados.ChamadoMapper;
 import monitore.com.chamados.ChamadoService;
+import monitore.com.dashboard.DashboardJsonWriter;
+import monitore.com.dashboard.DashboardSuporte;
+import monitore.com.dashboard.DashboardSuporteBuilder;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -31,8 +34,12 @@ public class Main {
         List<Chamado> chamados =
                 chamadoService.buscarTodos(baseUrl, autenticacao);
 
-        for (Chamado chamado : chamados) {
-            System.out.println(chamado);
-        }
+        DashboardSuporteBuilder builder = new DashboardSuporteBuilder(chamados);
+        DashboardSuporte dashboard = builder.construir();
+
+        DashboardJsonWriter jsonWriter = new DashboardJsonWriter();
+        String jsonFinal = jsonWriter.escrever(dashboard);
+
+        System.out.println(jsonFinal);
     }
 }
