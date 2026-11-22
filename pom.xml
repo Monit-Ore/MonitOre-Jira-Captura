@@ -25,6 +25,21 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.22.3</version>
         </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.27.21</version>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sso</artifactId>
+            <version>2.27.21</version>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ssooidc</artifactId>
+            <version>2.27.21</version>
+        </dependency>
     </dependencies>
 
 
