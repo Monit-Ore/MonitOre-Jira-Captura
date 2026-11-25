@@ -10,8 +10,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class S3Provider {
     private final AwsCredentialsProvider credentialsProvider;
 
-    public S3Provider() {
-        String nomePerfil = System.getenv("AWS_PROFILE");
+    public S3Provider(String nomePerfil) {
 
         if (nomePerfil == null || nomePerfil.isBlank()) {
             this.credentialsProvider = DefaultCredentialsProvider.create();

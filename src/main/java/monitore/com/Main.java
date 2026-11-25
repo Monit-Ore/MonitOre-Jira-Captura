@@ -5,24 +5,21 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import monitore.com.chamados.Chamado;
-import monitore.com.chamados.ChamadoMapper;
-import monitore.com.chamados.ChamadoService;
-import monitore.com.dashboard.DashboardJsonWriter;
-import monitore.com.dashboard.DashboardSuporte;
-import monitore.com.dashboard.DashboardSuporteBuilder;
-import monitore.com.s3.DashboardS3Uploader;
-import monitore.com.s3.S3Provider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String baseUrl = System.getenv("JIRA_BASE_URL");
-        String email = System.getenv("JIRA_EMAIL");
-        String token = System.getenv("JIRA_API_TOKEN");
-        String bucketGold = System.getenv("S3_BUCKET_NAME");
-        String regiaoAws = System.getenv("AWS_REGION");
+        System.out.println("Iniciando serviço de captura Jira → S3.");
+
+        Dotenv env = Dotenv.configure()
+                .ignoreIfMissing()
+                .load();
+
+        String baseUrl = env.get("JIRA_BASE_URL");
+        String email = env.get("JIRA_EMAIL");
+        String token = env.get("JIRA_API_TOKEN");
+        String bucketGold = env.get("S3_BUCKET_NAME");
+        String regiaoAws = env.get("AWS_REGION");
 
         List<String> configuracoesAusentes = new ArrayList<>();
         if (estaVazio(baseUrl)) configuracoesAusentes.add("JIRA_BASE_URL");
@@ -32,7 +29,7 @@ public class Main {
         if (estaVazio(regiaoAws)) configuracoesAusentes.add("AWS_REGION");
 
         if (!configuracoesAusentes.isEmpty()) {
-            System.out.println("Configure estas variáveis na configuração de execução do IntelliJ: "
+            System.out.println("Configuração incompleta. Variáveis ausentes: "
                     + String.join(", ", configuracoesAusentes));
             return;
         }
@@ -41,32 +38,8 @@ public class Main {
         String autenticacao = Base64.getEncoder()
                 .encodeToString(credenciais.getBytes(StandardCharsets.UTF_8));
 
-        JiraClient jiraClient = new JiraClient();
-        ChamadoMapper chamadoMapper = new ChamadoMapper();
-        ChamadoService chamadoService =
-                new ChamadoService(jiraClient, chamadoMapper);
-
-        List<Chamado> chamados =
-                chamadoService.buscarTodos(baseUrl, autenticacao);
-
-        DashboardSuporteBuilder builder = new DashboardSuporteBuilder(chamados);
-        DashboardSuporte dashboard = builder.construir();
-
-        DashboardJsonWriter jsonWriter = new DashboardJsonWriter();
-        String jsonFinal = jsonWriter.escrever(dashboard);
-
-        System.out.println(jsonFinal);
-
-        S3Provider s3Provider = new S3Provider();
-        S3Client s3Client = s3Provider.getS3Client(Region.of(regiaoAws));
-        try (DashboardS3Uploader uploader = new DashboardS3Uploader(
-                s3Client,
-                bucketGold,
-                System.getenv("S3_PREFIX")
-        )) {
-            String chave = uploader.enviarJson(jsonFinal);
-            System.out.println("JSON enviado para s3://" + bucketGold + "/" + chave);
-        }
+        CapturaAgendada capturaAgendada = new CapturaAgendada();
+        capturaAgendada.Rodar20min(baseUrl,autenticacao,regiaoAws,bucketGold);
     }
 
     private static boolean estaVazio(String valor) {
